@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { GoogleLoginButton } from "../components/Button/auth/GoogleLogin";
+import api from "../services/axios";
 const Button = styled.button<{ $primary?: boolean }>`
   background: transparent;
   border-radius: 3px;
@@ -16,16 +17,67 @@ const Button = styled.button<{ $primary?: boolean }>`
       color: white;
     `};
 `;
+
+const Input = styled.input`
+  margin: 0.5em 0;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+`;
+
 const Login = () => {
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   useEffect(() => {
-   
+    // Your useEffect logic here
   }, []);
-    return (
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleLoginSubmit = async () => {
+    try {
+      const user = await api.post("/auth/email-login", {
+        email: email,
+        password: password,
+      });
+
+      console.log(user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
     <div>
-        <GoogleLoginButton />
-      <Button>dd</Button>
-      {/* Add your login form here */}
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={handleEmailChange}
+      />
+      <Input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={handlePasswordChange}
+      />
+
+      <Button
+        onClick={() => {
+          handleLoginSubmit();
+        }}
+      >
+        Login
+      </Button>
+
+      <GoogleLoginButton />
     </div>
   );
 };
