@@ -1,13 +1,12 @@
-import { GoogleLogin } from "@react-oauth/google";
+import {useGoogleLogin } from "@react-oauth/google";
 import api from "../../../services/axios";
 export const GoogleLoginButton = () => {
   const handleSuccess = async (response: any) => {
-    const { credential, clientId } = response;
+    const { code } = response;
     
     try {
       const userData = await api.post("/auth/google", {
-        credential: credential,
-        clientId: clientId,
+        credential: code,
       });
 
       console.log(userData )
@@ -22,14 +21,22 @@ export const GoogleLoginButton = () => {
     console.log('faild')
   };
 
+  const login = useGoogleLogin({
+    onSuccess: tokenResponse => handleSuccess(tokenResponse),
+    onError: () => handleError(),
+    flow: 'auth-code',
+  });
+
   return (
-    <GoogleLogin
-      onSuccess={(res) => {
-        handleSuccess(res);
-      }}
-      onError={() => {
-        handleError();
-      }}
-    />
+
+    <button onClick={()=>login()}>Google</button>
+    // <GoogleLogin
+    //   onSuccess={(res) => {
+    //     handleSuccess(res);
+    //   }}
+    //   onError={() => {
+    //     handleError();
+    //   }}
+    // />
   );
 };
