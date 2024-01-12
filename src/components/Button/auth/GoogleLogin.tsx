@@ -1,5 +1,6 @@
-import {useGoogleLogin } from "@react-oauth/google";
+import {useGoogleLogin, } from "@react-oauth/google";
 import api from "../../../services/axios";
+import { Button } from "@adobe/react-spectrum";
 export const GoogleLoginButton = () => {
   const handleSuccess = async (response: any) => {
     const { code } = response;
@@ -13,23 +14,28 @@ export const GoogleLoginButton = () => {
 
       
     } catch (err) {
-      console.log(err);
+      throw new Error(String(err));
     }
   };
 
-  const handleError = () => {
-    console.log('faild')
+  const handleError = (error:any) => {
+    console.log(error);
   };
 
   const login = useGoogleLogin({
     onSuccess: tokenResponse => handleSuccess(tokenResponse),
-    onError: () => handleError(),
+    onError: (error) => handleError(error),
     flow: 'auth-code',
   });
 
   return (
-
-    <button onClick={()=>login()}>Google</button>
+    <Button onPress={
+      () => {
+        login()
+      }
+    }  variant="primary">Continue with Google</Button>
+    // <button className="bg-red-400" onClick={()=>login()}>Google</button>
+ 
     // <GoogleLogin
     //   onSuccess={(res) => {
     //     handleSuccess(res);

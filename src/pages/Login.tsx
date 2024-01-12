@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { GoogleLoginButton } from "../components/Button/auth/GoogleLogin";
+import { GuestLoginButton } from "../components/Button/auth/GuestLogin";
 import api from "../services/axios";
 const Button = styled.button<{ $primary?: boolean }>`
   background: transparent;
@@ -30,8 +31,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // Your useEffect logic here
+    handleCheckLoign()
   }, []);
+
+  const handleCheckLoign = async () => {
+    try {
+      const user = await api.post("/auth/check-user-login");
+      console.log(user);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -76,7 +86,7 @@ const Login = () => {
       >
         Login
       </Button>
-
+      <GuestLoginButton />
       <GoogleLoginButton />
     </div>
   );
