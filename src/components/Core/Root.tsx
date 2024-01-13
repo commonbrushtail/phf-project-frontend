@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLoaderData, Outlet, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import api from "../../services/axios";
 export const Root = () => {
   const userData = useLoaderData();
@@ -15,9 +16,17 @@ export const Root = () => {
   }, []);
 
   return (
-    <div className="h-full">
+    <AnimatePresence>
+    <motion.div
+      className="overflow-hidden"
+      initial={{ opacity: 0, }}
+      animate={{ opacity: 1, }}
+      transition={{ duration: 0.5 }}
+      exit={{ opacity: 0 }}
+    >
       <Outlet />
-    </div>
+    </motion.div>
+  </AnimatePresence>
   );
 };
 
@@ -32,3 +41,5 @@ export const rootLoader = async ({request}:any) => {
     return null;
   }
 }
+
+export default Root;

@@ -5,29 +5,19 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider, defaultTheme } from "@adobe/react-spectrum";
 import { Provider as ReduxProvider } from "react-redux";
-import { AnimatePresence, motion } from "framer-motion";
 import store from "./store/store";
 import api from "./services/axios";
 import Login from "./pages/Login";
-import { Email } from "./pages/Email";
-import { Root } from "./components/Core/Root";
-import { Experience } from "./components/Core/Experience";
+import Email from "./pages/Email";
+import Root from "./components/Core/Root";
+import Experience from "./components/Core/Experience";
+import { motion } from "framer-motion";
 
+// Define routes
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <AnimatePresence>
-        <motion.div
-          className="h-full"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <Root />
-        </motion.div>
-      </AnimatePresence>
-    ),
+    element: <Root />,
     loader: async ({ request }) => {
       try {
         const userData = await api.post("/auth/check-user-login", {
@@ -38,54 +28,28 @@ const router = createBrowserRouter([
         return null;
       }
     },
-
     children: [
+      { path: "login", element: <Login /> },
       {
-        path: "/login",
+        path: "email-login",
         element: (
           <motion.div
-            className="h-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <Login />
-          </motion.div>
-        ),
-      },
-      {
-        path: "/email-login",
-        element: (
-          <motion.div
-            className="h-full"
-            initial={{ opacity: 0, x: "100" }}
-            animate={{ opacity: 1, x: "0" }}
-            transition={{ duration: 2 }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
             exit={{ opacity: 0 }}
           >
             <Email />
           </motion.div>
         ),
       },
-      {
-        path: "/experience",
-        element: (
-          <motion.div
-            className="h-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <Experience />
-          </motion.div>
-        ),
-      },
+      { path: "experience", element: <Experience /> },
     ],
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+const App = () => {
+  return (
     <ReduxProvider store={store}>
       <Provider id="spectrum-provider" theme={defaultTheme}>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
@@ -93,5 +57,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </GoogleOAuthProvider>
       </Provider>
     </ReduxProvider>
+  );
+};
+
+// Create the root once
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+
+// Use the root's render method
+root.render(
+  <React.StrictMode>
+    <App />
   </React.StrictMode>
 );
