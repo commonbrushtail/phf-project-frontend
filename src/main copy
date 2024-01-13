@@ -1,0 +1,82 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Root } from "./components/Core/Root";
+import "./index.css";
+import { createBrowserRouter, RouterProvider ,useLocation,Routes,Route, BrowserRouter } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Provider, defaultTheme } from "@adobe/react-spectrum";
+import { Provider as ReduxProvider } from "react-redux";
+import store from "./store/store";
+import api from "./services/axios";
+import Login from "./pages/Login";
+import { Experience } from "./components/Core/Experience";
+import { useTransition, animated } from '@react-spring/web';
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <Root />,
+//     loader: async ({request}) => {
+//       try {
+//         const userData = await api.post("/auth/check-user-login",{
+//           signal: request.signal
+//         });
+//         return userData;
+//       } catch (err) {
+//         return null;
+//       }
+//     },
+
+//     children: [
+      
+//       {
+//         path: "/login",
+//         element: <Login/>
+//       },
+//       {
+//         path: "/experience",
+//         element: <Experience/>
+//       }
+     
+//     ]
+//   },
+// ]);
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  const transitions = useTransition(location, {
+    from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
+    enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
+    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
+  });
+
+  return transitions((style, item) => (
+    <animated.div style={style}>
+      <Routes location={item}>
+        <Route path="/" element={<Root />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/experience" element={<Experience />} />
+        {/* other routes */}
+      </Routes>
+    </animated.div>
+  ));
+};
+
+const App = () => (
+  <ReduxProvider store={store}>
+    <Provider id="spectrum-provider" theme={defaultTheme}>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <BrowserRouter>
+          <AnimatedRoutes />
+        </BrowserRouter>
+      </GoogleOAuthProvider>
+    </Provider>
+  </ReduxProvider>
+);
+
+const rootElement = document.getElementById("root") || document.createElement("div");
+ReactDOM.createRoot(rootElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

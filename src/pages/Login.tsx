@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
+import api from "../services/axios";
+import { EmailLoginButton } from "../components/Button/auth/EmailLogin";
 import { GoogleLoginButton } from "../components/Button/auth/GoogleLogin";
 import { GuestLoginButton } from "../components/Button/auth/GuestLogin";
-import api from "../services/axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    handleCheckLoign()
+    handleCheckLoign();
   }, []);
 
   const handleCheckLoign = async () => {
@@ -18,7 +19,7 @@ const Login = () => {
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -42,11 +43,10 @@ const Login = () => {
   };
 
   return (
-    <div className="h-full">
-    
-   
+    <div className="h-full flex flex-col gap-y-3 items-center justify-center ">
       <GuestLoginButton />
       <GoogleLoginButton />
+      <EmailLoginButton />
     </div>
   );
 };
