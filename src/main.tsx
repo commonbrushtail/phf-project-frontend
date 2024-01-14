@@ -8,7 +8,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import store from "./store/store";
 import api from "./services/axios";
 import Login from "./pages/Login";
-import Email from "./pages/Email";
+import Email from "./pages/EmailLogin";
 import Root from "./components/Core/Root";
 import Experience from "./components/Core/Experience";
 import { motion } from "framer-motion";

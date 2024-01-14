@@ -7,7 +7,7 @@ export const Root = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userData) {
+    if (userData) {
       navigate("/experience");
      
     }else{
@@ -18,7 +18,7 @@ export const Root = () => {
   return (
     <AnimatePresence>
     <motion.div
-      className="overflow-hidden"
+      className="overflow-hidden h-full"
       initial={{ opacity: 0, }}
       animate={{ opacity: 1, }}
       transition={{ duration: 0.5 }}

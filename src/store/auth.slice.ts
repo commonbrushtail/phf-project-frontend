@@ -1,36 +1,42 @@
-// Import necessary dependencies
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import api from '../services/axios';
-// Define the initial state
-interface AuthState {
-    user: any;
+import { createSlice } from "@reduxjs/toolkit";
+
+interface LoginRequest {
+    type: "google" | "facebook" | "email" | null;
+    email: string;
+    password: string;
     isLoading: boolean;
     error: string | null;
 }
 
-export const checkUserLogin = async ()=>{
-    try{
-        const response = await api.get('auth/check-user-login');
-        return response.data;
-    }catch(error){
-        return error
-    }
+interface initialState {
+    loginRequest: LoginRequest;
 }
 
-const authSlice = createSlice({
-    name: 'auth',
-    initialState: {
-        user: null,
+const initialState: initialState = {
+    loginRequest: {
+        type: null,
+        email: "",
+        password: "",
         isLoading: false,
         error: null,
-    } as AuthState,
-    reducers: {
-       checkLoginStart: (state) => {
-
-       }
     },
+};
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    loginRequest(state, action) {
+      state.loginRequest.isLoading = true;
+    },
+    loginSuccess(state, action) {
+      state.loginRequest.isLoading = false;
+    },
+    loginFailure(state, action) {
+      state.loginRequest.isLoading = false;
+    },
+  },
 });
 
-// Export the actions and reducer
-export const { checkLoginStart } = authSlice.actions;
+export const { loginRequest, loginSuccess, loginFailure } = authSlice.actions;
 export default authSlice.reducer;
