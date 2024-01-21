@@ -9,7 +9,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    handleCheckLoign();
   }, []);
 
   const handleCheckLoign = async () => {

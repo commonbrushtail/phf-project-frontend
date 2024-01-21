@@ -6,7 +6,7 @@ import api from "../services/axios";
 function* emailLoginSaga(action): Generator<any, any, any> {
     try {
         const { email, password } = action.payload;
-        const response: any = yield call(api.post, "auth/email-login", { email, password });
+        const response: any = yield call(api.post, "/auth/email-login", { email, password });
         console.log(response)
         yield put(loginSuccess(response.data));
     } catch (error: Error) {
